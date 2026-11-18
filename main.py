@@ -30,14 +30,12 @@ def main():
         print("No artists selected. Exiting.")
         return
 
-
     while True:
         raw = input("\\nHow many tracks do you want in the playlist? ").strip()
         if raw.isdigit() and int(raw) > 0:
             total_tracks = int(raw)
             break
         print("Enter a positive whole number.")
-
 
     artist_track_lists = []
     for artist in artists:
@@ -50,7 +48,6 @@ def main():
     if not playlist:
         print("No tracks could be selected. Try different artists.")
         return
-
 
     filename = export_playlist_preview(playlist)
     print("\\n=== MIXIFY PREVIEW ===")
