@@ -1,13 +1,100 @@
-# Projeto-de-remover-músicas-duplicadas-no-spotfy-
-Removedor de Músicas Duplicadas no Spotify | Python
-Projeto desenvolvido em Python com o objetivo de identificar e remover músicas duplicadas de playlists do Spotify, evitando repetições e proporcionando uma experiência de reprodução mais organizada.
+## Spotify Duplicate Cleaner
 
-A aplicação utiliza a integração com a API do Spotify para acessar as faixas de uma playlist, identificar músicas repetidas e realizar a limpeza da lista de reprodução de forma automatizada.
+Script desenvolvido em Python para identificar músicas duplicadas em playlists do Spotify, utilizando a API oficial do Spotify.
 
-Tecnologias e conceitos utilizados:
+O projeto busca facilitar a organização de playlists, identificando faixas repetidas e apresentando informações sobre as duplicatas encontradas.
+
+## Objetivo
+
+Desenvolver uma ferramenta capaz de analisar playlists do Spotify, identificar músicas duplicadas e, futuramente, automatizar sua remoção, mantendo apenas uma ocorrência de cada faixa.
+
+## Funcionalidades
+
+- Autenticação com a conta Spotify.
+- Leitura de playlists.
+- Identificação de músicas duplicadas por URI.
+- Contagem de ocorrências repetidas.
+- Exibição do nome da música e dos artistas.
+- Análise sem alteração da playlist.
+
+## Tecnologias utilizadas
+
 - Python
-- API do Spotify
-- Manipulação de dados
-- Identificação de duplicidades
-- Automação de tarefas
-Objetivo: aplicar conhecimentos de Python e integração com APIs na resolução de um problema cotidiano por meio da automação.
+- Spotipy
+- Spotify Web API
+- python-dotenv
+
+## Como funciona
+
+1. O usuário fornece o link da playlist.
+2. O script extrai o ID da playlist.
+3. A API do Spotify retorna as músicas presentes nela.
+4. O script percorre as faixas e agrupa músicas com URIs iguais.
+5. As duplicatas são identificadas e exibidas no terminal.
+
+## Instalação
+
+Clone o repositório:
+
+```bash
+git clone https://github.com/SEU-USUARIO/spotify-duplicate-cleaner.git
+```
+
+Entre na pasta do projeto:
+
+```bash
+cd spotify-duplicate-cleaner
+```
+
+Instale as dependências:
+
+```bash
+pip install -r requirements.txt
+```
+
+## Configuração
+
+Crie uma aplicação no Spotify Developer Dashboard:
+
+https://developer.spotify.com/dashboard
+
+Configure as credenciais de acesso e o Redirect URI:
+
+```text
+http://127.0.0.1:8888/callback
+```
+
+Crie um arquivo `.env` na raiz do projeto:
+
+```env
+SPOTIFY_CLIENT_ID=seu_client_id
+SPOTIFY_CLIENT_SECRET=seu_client_secret
+```
+
+## Execução
+
+Execute o script:
+
+```bash
+python spotify_cleaner.py
+```
+
+Cole o link da playlist que deseja analisar quando solicitado.
+
+## Segurança
+
+As credenciais da API devem ser armazenadas em variáveis de ambiente.
+
+Não compartilhe seu Client Secret ou arquivo `.env`.
+
+## Próximas melhorias
+
+- Remoção automatizada de músicas duplicadas.
+- Confirmação antes de excluir faixas.
+- Relatório detalhado das duplicatas.
+- Exportação dos resultados para CSV.
+- Interface gráfica para facilitar o uso.
+
+## Licença
+
+Este projeto está sob a licença MIT.
