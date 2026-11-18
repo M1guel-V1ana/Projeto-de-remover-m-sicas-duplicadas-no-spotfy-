@@ -9,7 +9,7 @@ def collect_artists(spotify):
     selected = []
     print("Enter artist names. Leave blank when you are done.")
     while True:
-        name = input("\\nArtist name: ").strip()
+        name = input("Artist name: ").strip()
         if not name:
             break
         artist = choose_artist(spotify, name)
@@ -23,7 +23,7 @@ def collect_artists(spotify):
 
 def main():
     print("=== Mixify ===")
-    print("Your artists. Your mix. Your vibe.\\n")
+    print("Your artists. Your mix. Your vibe.")
     spotify = create_spotify_client()
     artists = collect_artists(spotify)
     if not artists:
@@ -31,7 +31,7 @@ def main():
         return
 
     while True:
-        raw = input("\\nHow many tracks do you want in the playlist? ").strip()
+        raw = input("How many tracks do you want in the playlist? ").strip()
         if raw.isdigit() and int(raw) > 0:
             total_tracks = int(raw)
             break
@@ -39,7 +39,7 @@ def main():
 
     artist_track_lists = []
     for artist in artists:
-        print(f"\\nSearching tracks for {artist['name']}...")
+        print(f"Searching tracks for {artist['name']}...")
         tracks = search_artist_tracks(spotify, artist, limit=50)
         print(f"Found {len(tracks)} usable tracks.")
         artist_track_lists.append((artist, tracks))
@@ -49,13 +49,14 @@ def main():
         print("No tracks could be selected. Try different artists.")
         return
 
+
     filename = export_playlist_preview(playlist)
-    print("\\n=== MIXIFY PREVIEW ===")
+    print("=== MIXIFY PREVIEW ===")
     print(f"Selected artists: {', '.join(a['name'] for a in artists)}")
     print(f"Tracks requested: {total_tracks}")
     print(f"Tracks selected: {len(playlist)}")
     print(f"Preview saved to: {filename}")
-    print("\\nThis MVP does not create or modify Spotify playlists yet.")
+    print("This MVP does not create or modify Spotify playlists yet.")
     for number, track in enumerate(playlist, start=1):
         artist_names = ", ".join(a.get("name", "") for a in track.get("artists", []))
         print(f"{number:02d}. {track.get('name')} — {artist_names}")
