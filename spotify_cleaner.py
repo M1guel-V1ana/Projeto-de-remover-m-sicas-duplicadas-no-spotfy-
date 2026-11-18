@@ -37,7 +37,7 @@ def criar_cliente_spotify():
 
 
 def obter_id_playlist(link):
-    return link.split("/")[-1].split("?')[0]
+    return link.split("/")[-1].split("?")[0]
 
 
 def obter_musicas(spotify, playlist_id):
