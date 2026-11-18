@@ -1,98 +1,97 @@
-# Spotify Duplicate Cleaner
+# Mixify
 
-Script desenvolvido em Python para identificar músicas duplicadas em playlists do Spotify, utilizando a API oficial do Spotify.
+**Your artists. Your mix. Your vibe.**
 
-O projeto busca facilitar a organização de playlists, identificando faixas repetidas e apresentando informações sobre as duplicatas encontradas.
+Mixify is a Python project that combines artists chosen by the user and generates a personalized playlist from Spotify catalog search results.
 
-## Objetivo
+## MVP
 
-Desenvolver uma ferramenta capaz de analisar playlists do Spotify, identificar músicas duplicadas e, futuramente, automatizar sua remoção, mantendo apenas uma ocorrência de cada faixa.
+- Authenticate with Spotify using OAuth.
+- Search for artists and let the user confirm the correct result.
+- Search tracks for selected artists.
+- Avoid duplicate tracks by Spotify URI.
+- Balance tracks across artists (round-robin selection).
+- Export the generated selection to JSON for review.
 
-## Funcionalidades
+> Playlist creation inside Spotify is planned for a later step. This MVP does not modify any Spotify playlist.
 
-- Autenticação com a conta Spotify.
-- Leitura de playlists.
-- Identificação de músicas duplicadas por URI.
-- Contagem de ocorrências repetidas.
-- Exibição do nome da música e dos artistas.
-- Análise sem alteração da playlist.
+## Requirements
 
-## Tecnologias utilizadas
+- Python 3.10+
+- Spotify Developer application
+- Spotify account
 
-- Python
-- Spotipy
-- Spotify Web API
-- python-dotenv
+## Setup
 
-## Como funciona
-
-1. O usuário fornece o link da playlist.
-2. O script extrai o ID da playlist.
-3. A API do Spotify retorna as músicas presentes nela.
-4. O script percorre as faixas e agrupa músicas com URIs iguais.
-5. As duplicatas são identificadas e exibidas no terminal.
-
-## Instalação
-
-Clone o repositório:
+Clone the repository and enter its folder:
 
 ```bash
 git clone https://github.com/M1guel-V1ana/Projeto-de-remover-m-sicas-duplicadas-no-spotfy-.git
-```
-
-Entre na pasta:
-
-```bash
 cd Projeto-de-remover-m-sicas-duplicadas-no-spotfy-
 ```
 
-Instale as dependências:
+Create and activate a virtual environment:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
+
+Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Configuração
+Create a `.env` file in the project root:
 
-Crie uma aplicação no [Spotify Developer Dashboard](https://developer.spotify.com/dashboard).
+```env
+SPOTIFY_CLIENT_ID=your_client_id
+SPOTIFY_CLIENT_SECRET=your_client_secret
+```
 
-Configure as credenciais de acesso e o Redirect URI:
+In Spotify Developer Dashboard, configure this Redirect URI:
 
-```text
+```
 http://127.0.0.1:8888/callback
 ```
 
-Crie um arquivo `.env` na raiz do projeto:
-
-```env
-SPOTIFY_CLIENT_ID=seu_client_id
-SPOTIFY_CLIENT_SECRET=seu_client_secret
-```
-
-## Execução
-
-Execute o script:
+## Run
 
 ```bash
-python spotify_cleaner.py
+python main.py
 ```
 
-Cole o link da playlist que deseja analisar quando solicitado.
+Enter artist names one by one. Select the matching artist from Spotify search results, choose the desired number of tracks, and Mixify will create a balanced selection and export it to `playlist_preview.json`.
 
-## Segurança
+## Project structure
 
-- Armazene as credenciais em variáveis de ambiente.
-- Não compartilhe seu Client Secret ou arquivo `.env`.
-- O arquivo `.env` está listado no `.gitignore`.
+```
+main.py
+spotify_client.py
+artist_search.py
+playlist_generator.py
+playlist_manager.py
+config.py
+```
 
-## Próximas melhorias
+## Roadmap
 
-- Remoção automatizada de músicas duplicadas.
-- Confirmação antes de excluir faixas.
-- Relatório detalhado das duplicatas.
-- Exportação dos resultados para CSV.
-- Interface gráfica para facilitar o uso.
+- [x] Spotify OAuth connection
+- [x] Artist search and confirmation
+- [x] Track search for selected artists
+- [x] URI-based duplicate prevention
+- [x] Balanced track selection
+- [x] JSON preview export
+- [ ] Create a playlist in Spotify
+- [ ] Playlist name and description customization
+- [ ] Streamlit interface
+- [ ] More playlist selection controls
 
-## Licença
+## Security
 
-Este projeto está sob a licença MIT.
+Never commit your `.env` file or share your Spotify Client Secret. Spotify catalog metadata is used only to help users select music; the project does not download Spotify audio.
+
+## License
+
+MIT
