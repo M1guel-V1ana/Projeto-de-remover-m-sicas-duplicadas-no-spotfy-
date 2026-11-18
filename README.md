@@ -1,4 +1,4 @@
-## Spotify Duplicate Cleaner
+# Spotify Duplicate Cleaner
 
 Script desenvolvido em Python para identificar músicas duplicadas em playlists do Spotify, utilizando a API oficial do Spotify.
 
@@ -37,13 +37,13 @@ Desenvolver uma ferramenta capaz de analisar playlists do Spotify, identificar m
 Clone o repositório:
 
 ```bash
-git clone https://github.com/SEU-USUARIO/spotify-duplicate-cleaner.git
+git clone https://github.com/M1guel-V1ana/Projeto-de-remover-m-sicas-duplicadas-no-spotfy-.git
 ```
 
-Entre na pasta do projeto:
+Entre na pasta:
 
 ```bash
-cd spotify-duplicate-cleaner
+cd Projeto-de-remover-m-sicas-duplicadas-no-spotfy-
 ```
 
 Instale as dependências:
@@ -54,9 +54,7 @@ pip install -r requirements.txt
 
 ## Configuração
 
-Crie uma aplicação no Spotify Developer Dashboard:
-
-https://developer.spotify.com/dashboard
+Crie uma aplicação no [Spotify Developer Dashboard](https://developer.spotify.com/dashboard).
 
 Configure as credenciais de acesso e o Redirect URI:
 
@@ -83,9 +81,9 @@ Cole o link da playlist que deseja analisar quando solicitado.
 
 ## Segurança
 
-As credenciais da API devem ser armazenadas em variáveis de ambiente.
-
-Não compartilhe seu Client Secret ou arquivo `.env`.
+- Armazene as credenciais em variáveis de ambiente.
+- Não compartilhe seu Client Secret ou arquivo `.env`.
+- O arquivo `.env` está listado no `.gitignore`.
 
 ## Próximas melhorias
 
