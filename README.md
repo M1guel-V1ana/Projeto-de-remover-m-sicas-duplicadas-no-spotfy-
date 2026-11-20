@@ -2,18 +2,46 @@
 
 **Your artists. Your mix. Your vibe.**
 
-Mixify is a Python project that combines artists chosen by the user and generates a personalized playlist from Spotify catalog search results.
+Mixify is a Python project for building personalized playlists from artists and music selected by the user, using Spotify's catalog.
 
-## MVP
+## Product rules
 
-- Authenticate with Spotify using OAuth.
-- Search for artists and let the user confirm the correct result.
-- Search tracks for selected artists.
-- Avoid duplicate tracks by Spotify URI.
-- Balance tracks across artists (round-robin selection).
-- Export the generated selection to JSON for review.
+- The user can add multiple artists.
+- Every selected artist must contribute at least **one track**.
+- The user chooses the desired number of tracks separately for each artist.
+- Mixify imposes no arbitrary total-playlist-size limit.
+- Duplicate tracks are identified by Spotify track URI and included only once.
+- Tracks are interleaved between artists.
+- If an artist has no available unique tracks, generation stops with a clear message.
+- If fewer unique tracks are available than requested, Mixify uses the available tracks and reports the difference.
 
-> Playlist creation inside Spotify is planned for a later step. This MVP does not modify any Spotify playlist.
+## Current MVP
+
+- Spotify authentication.
+- Artist search and confirmation.
+- Paginated track search for each selected artist.
+- Custom track quantity per artist.
+- Minimum of one unique track per selected artist.
+- URI-based duplicate prevention.
+- Interleaved playlist generation.
+- JSON preview export.
+
+> The current MVP only creates a local JSON preview. It does not create, edit, or delete Spotify playlists.
+
+## Planned features
+
+- Search and select complete albums and EPs.
+- Pick individual tracks.
+- Combine artist, album, and track selections in one playlist.
+- Create a new playlist in the user's Spotify account.
+- Add tracks to Spotify playlists in API-compliant batches.
+- Interface for reviewing and editing the playlist before saving.
+
+## Technical notes and API limits
+
+Mixify does not impose an arbitrary total playlist-size limit. Actual results depend on tracks available in Spotify's catalog and Spotify Web API restrictions. Search requests are paginated (up to 50 results per request); Spotify's Search API has an offset ceiling, so very large artist catalogs may require album-based catalog retrieval in a future iteration.
+
+When playlist creation is implemented, tracks will be sent in batches that respect the API's per-request item limit. Large playlists will be processed in multiple requests.
 
 ## Requirements
 
@@ -43,14 +71,14 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
-Create a `.env` file in the project root:
+Create a .env file in the project root:
 
 ```env
 SPOTIFY_CLIENT_ID=your_client_id
 SPOTIFY_CLIENT_SECRET=your_client_secret
 ```
 
-In Spotify Developer Dashboard, configure this Redirect URI:
+The Spotify Developer Dashboard must contain this Redirect URI:
 
 ```
 http://127.0.0.1:8888/callback
@@ -62,7 +90,7 @@ http://127.0.0.1:8888/callback
 python main.py
 ```
 
-Enter artist names one by one. Select the matching artist from Spotify search results, choose the desired number of tracks, and Mixify will create a balanced selection and export it to `playlist_preview.json`.
+Add artists, confirm each search result, and enter the number of tracks desired from each artist. Mixify generates an interleaved preview and saves it as playlist_preview.json.
 
 ## Project structure
 
@@ -75,22 +103,9 @@ playlist_manager.py
 config.py
 ```
 
-## Roadmap
-
-- [x] Spotify OAuth connection
-- [x] Artist search and confirmation
-- [x] Track search for selected artists
-- [x] URI-based duplicate prevention
-- [x] Balanced track selection
-- [x] JSON preview export
-- [ ] Create a playlist in Spotify
-- [ ] Playlist name and description customization
-- [ ] Streamlit interface
-- [ ] More playlist selection controls
-
 ## Security
 
-Never commit your `.env` file or share your Spotify Client Secret. Spotify catalog metadata is used only to help users select music; the project does not download Spotify audio.
+Never commit your .env file or share your Spotify Client Secret. Mixify uses Spotify catalog metadata and does not download audio.
 
 ## License
 
