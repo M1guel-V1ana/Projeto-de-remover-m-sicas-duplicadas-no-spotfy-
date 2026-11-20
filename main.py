@@ -1,23 +1,33 @@
-"""Mixify MVP - generate a balanced playlist preview from selected artists."""
+"Mixify MVP: personalized playlist preview from selected artists."
 from artist_search import choose_artist
-from playlist_generator import search_artist_tracks, generate_balanced_playlist
+from playlist_generator import search_artist_tracks, generate_custom_playlist
 from playlist_manager import export_playlist_preview
 from spotify_client import create_spotify_client
 
 
+def ask_track_count(artist_name):
+    while True:
+        raw = input(f"How many tracks do you want from {artist_name}? ").strip()
+        if raw.isdigit() and int(raw) >= 1:
+            return int(raw)
+        print("Choose at least 1 track for each artist.")
+
+
 def collect_artists(spotify):
     selected = []
-    print("Enter artist names. Leave blank when you are done.")
+    print("Add artists one by one. Press Enter on an empty name when finished.")
     while True:
         name = input("Artist name: ").strip()
         if not name:
             break
         artist = choose_artist(spotify, name)
-        if artist and all(existing.get("id") != artist.get("id") for existing in selected):
-            selected.append(artist)
-            print(f"Added: {artist['name']}")
-        elif artist:
-            print("Artist already selected.")
+        if not artist:
+            continue
+        if any(item["id"] == artist["id"] for item in selected):
+            print("This artist is already in your selection.")
+            continue
+        selected.append(artist)
+        print(f"Added: {artist['name']}")
     return selected
 
 
@@ -30,36 +40,36 @@ def main():
         print("No artists selected. Exiting.")
         return
 
-    while True:
-        raw = input("How many tracks do you want in the playlist? ").strip()
-        if raw.isdigit() and int(raw) > 0:
-            total_tracks = int(raw)
-            break
-        print("Enter a positive whole number.")
-
+    preferences = [(artist, ask_track_count(artist["name"])) for artist in artists]
     artist_track_lists = []
-    for artist in artists:
-        print(f"Searching tracks for {artist['name']}...")
-        tracks = search_artist_tracks(spotify, artist, limit=50)
-        print(f"Found {len(tracks)} usable tracks.")
-        artist_track_lists.append((artist, tracks))
 
-    playlist = generate_balanced_playlist(artist_track_lists, total_tracks)
-    if not playlist:
-        print("No tracks could be selected. Try different artists.")
+    for artist, desired_count in preferences:
+        print(f"Searching tracks for {artist['name']}...")
+        search_limit = min(1000, desired_count + 50)
+        tracks = search_artist_tracks(spotify, artist, limit=search_limit)
+        print(f"Found {len(tracks)} tracks credited to {artist['name']}.")
+        artist_track_lists.append((artist, tracks, desired_count))
+
+    try:
+        playlist, counts = generate_custom_playlist(artist_track_lists)
+    except ValueError as error:
+        print(f"Could not generate playlist: {error}")
         return
 
+    for artist, desired_count in preferences:
+        actual = counts[artist["id"]]
+        if actual < desired_count:
+            print(f"Notice: {artist['name']} requested {desired_count}, but only {actual} unique tracks were available.")
 
     filename = export_playlist_preview(playlist)
-    print("=== MIXIFY PREVIEW ===")
-    print(f"Selected artists: {', '.join(a['name'] for a in artists)}")
-    print(f"Tracks requested: {total_tracks}")
-    print(f"Tracks selected: {len(playlist)}")
+    print("\n=== MIXIFY PREVIEW ===")
+    print(f"Selected artists: {len(artists)}")
+    print(f"Total tracks selected: {len(playlist)}")
     print(f"Preview saved to: {filename}")
-    print("This MVP does not create or modify Spotify playlists yet.")
+    print("This MVP exports a preview; it does not create or modify Spotify playlists.")
     for number, track in enumerate(playlist, start=1):
-        artist_names = ", ".join(a.get("name", "") for a in track.get("artists", []))
-        print(f"{number:02d}. {track.get('name')} — {artist_names}")
+        names = ", ".join(item.get("name", "") for item in track.get("artists", []))
+        print(f"{number:04d}. {track.get('name')} — {names}")
 
 
 if __name__ == "__main__":
